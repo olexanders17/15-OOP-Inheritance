@@ -13,7 +13,7 @@ function Casino(qty, money) {
             this.slotMachines.push(el);
         }
 
-        this.slotMachines[0].isLucky=true;
+        this.slotMachines[0].isLucky = true;
 
     }
 
@@ -29,9 +29,12 @@ function Casino(qty, money) {
 
     }
 
-    this.findMaxMoneyInSM = function (slotMachines) {
-        return slotMachines[1];
-    }
+    _findMaxMoneyInSM = function (slotMachines) {
+        var obj = _.max(slotMachines, function (el) {
+            return el.money;
+        });
+        return obj
+    }.bind(this);
 
     //done
     this.deleteSM = function (index) {
@@ -39,15 +42,12 @@ function Casino(qty, money) {
         this.slotMachines.splice(index, 1);
     }
 
-        //DONE
+    //DONE
     this.withdraw = function (money) {
         var reducedMoney = money;
 
-
         while (reducedMoney > 0) {
-            var obj = _.max(this.slotMachines, function (el) {
-                return el.money;
-            });
+            var obj = _findMaxMoneyInSM(this.slotMachines)
 
             if (obj.money > reducedMoney) {
                 this.slotMachines.forEach(function (el) {
@@ -76,32 +76,30 @@ function Casino(qty, money) {
     }
 
 
-
-
     this.init.call(this);
 }
 
 function SlotMachine(money) {
     this.money = money;
-    this.isLucky=false;
+    this.isLucky = false;
     this.id;
 
-    this.getMoney=function () {
+    this.getMoney = function () {
         return this.money;
     }
-    
-    this.withdraw=function (money) {
-        this.money-=money;
+
+    this.withdraw = function (money) {
+        this.money -= money;
     }
 
-    this.putMoney=function (money) {
-        this.money+=money;
+    this.putMoney = function (money) {
+        this.money += money;
     }
-    
-    this.doGame=function () {
+
+    this.doGame = function () {
 
     }
-    
+
 
 }
 
@@ -113,8 +111,8 @@ console.log(casino.slotMachines[0].withdraw(5));
 console.log(casino.slotMachines[0]);
 
 
-
-
 console.log("casino", casino);
+
+
 
 
