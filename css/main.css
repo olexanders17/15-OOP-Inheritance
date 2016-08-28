@@ -1,0 +1,62 @@
+.slot-machine-items {
+    height: 90px;
+    width: 80px;
+    display: inline-block;
+    background-color: aliceblue;
+    margin: 6px;
+}
+
+.slot-machine {
+    background-color: burlywood;
+    height: 100px;
+    width: 300px;
+
+}
+
+.slot-machine button {
+
+    border-radius: 10px;
+    width: 50px;
+}
+
+
+.bet {
+    width: 70px;
+}
+
+.win {
+    width: 70px;
+}
+.balance {
+    border-radius: 0px;
+}
+#spin {
+    width: 80px;
+    border-radius: 50%;
+}
+
+.cont {
+    border:1px solid black;
+    margin-left: 10px;
+    width: 300px;
+    height: 350px;
+
+}
+
+.labels {
+    display: inline-block;
+    margin-left: 50px;
+}
+
+#put {
+    width: 70px;
+}
+
+#start {
+    width: 100px;
+
+}
+
+.separator {
+    margin-top: 10px;
+}
