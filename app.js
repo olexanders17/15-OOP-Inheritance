@@ -123,7 +123,7 @@ function SlotMachine(money) {
             this.playerMoney = winAmount;
             this.money = 0;
         }
-        else if (rn1 == rn2 == rn3) {
+        else if ((rn1 == rn2) && (rn1 == rn3) && (rn2 == rn3)) {
             console.log("three other ");
             winAmount = this.bid * 5;
             this.playerMoney += winAmount;
