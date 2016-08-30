@@ -3,11 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>HW 15</title>
-    <script src="app.js"></script>
+    <script src="js/underscore.js"></script>
+
+
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+
+
+    <link rel="stylesheet" href="css/main.css">
+
 </head>
 <body>
 
+<div class="alert alert-danger">CASINO balance: </div>
 
+<div class="cont">
+    <div class="balance alert alert-warning">Balance:
+        <span id="balance" ></span>
+    </div>
+
+    <div class="slot-machine">
+
+        <div class="slot-machine-items btn btn-primary" id="n1"></div>
+        <div class="slot-machine-items btn btn-primary" id="n2"></div>
+        <div class="slot-machine-items btn btn-primary" id="n3"></div>
+
+        <input type="number"  class="bet input-sm" min="1" id="bet" >
+        <button id="spin" class=" spin btn btn-warning  ">SPIN</button>
+        <input type="text"  class="win"  id="win-input" disabled>
+        <div></div>
+        <div class="labels">Bet </div>
+        <div class="labels">Win </div>
+
+        <div class="separator "></div>
+
+        <button id="put" class="btn btn-success put btn-sm">Put money</button>
+        <input id="put-input" type="text" class="input-sm">
+
+        <div class="separator "></div>
+
+        <button id="start" class="btn-lg btn-danger">START</button>
+
+
+    </div>
+
+    <script src="app.js"></script>
+</div>
 
 
 </body>
