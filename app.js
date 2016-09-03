@@ -1,5 +1,5 @@
 function Casino(qty, money) {
-    this.countSM = qty;
+    this.initCountSM = qty;
     this.money = money;
     this.slotMachines = [];
     this.id = 0;
@@ -7,27 +7,49 @@ function Casino(qty, money) {
 
     //initial fill by slots
     this.init = function () {
+        var qty = this.initCountSM || 1;
         for (var i = 1; i <= qty; i++) {
-            var el = new SlotMachine(money / qty + 10 * i);
+            var el = new SlotMachine(Math.floor(money / qty));
             el.id = this.id + i;
             this.slotMachines.push(el);
         }
 
+        //Math.round(Math.random() * this.slotMachines.length);
         this.slotMachines[0].isLucky = true;
 
     }
 
     this.getMoneyAmountCasino = function () {
-        return money;
+
+        return this.money;
     }
 
     this.getQtySM = function () {
         return this.slotMachines.length;
     }
 
+
     this.addSM = function () {
+        var startMoney = _findMaxMoneyInSM(this.slotMachines).money;
+        var sm = new SlotMachine(startMoney);
+        sm.id = this.id + 1;
+        this.slotMachines.push(sm);
+        _updateBlance();
 
     }
+
+
+    var _updateBlance = function (add) {
+        var add = add || 0
+        this.money = 0;
+
+        for (var i = 0; i < this.slotMachines.length; i++) {
+            this.money += this.slotMachines[i].money;
+        }
+
+        this.money += add;
+
+    }.bind(this);
 
     var _findMaxMoneyInSM = function (slotMachines) {
         var obj = _.max(slotMachines, function (el) {
@@ -36,17 +58,42 @@ function Casino(qty, money) {
         return obj
     }.bind(this);
 
-    //done
-    this.deleteSM = function (index) {
-        var elToDelete;
-        this.slotMachines.splice(index, 1);
-    }
 
-    //DONE
+    this.deleteSM = function (id) {
+
+        if (this.slotMachines.length = 0) {
+            console.log("you can not delete slot machine because 0 machines available");
+            return;
+        }
+
+        for (var i = 0; i < this.slotMachines.length; i++) {
+            if (this.slotMachines[i].id == id) {
+                var moneyForAllocate = this.slotMachines[i].money;
+                this.slotMachines.splice(i, 1);
+                _updateBlance();
+                return;
+            }
+        }
+        console.log("can not find slot machine with id=", id);
+
+
+    };
+
+
     this.withdraw = function (money) {
-        var reducedMoney = money;
+        var reducedMoney = money || 0;
 
-        while (reducedMoney > 0) {
+        if (reducedMoney > this.money) {
+            console.log("There are not enoth money max available amount is ", this.money);
+            return;
+        }
+
+        if (this.slotMachines.length == 0) {
+            this.money -= reducedMoney;
+            return this.money;
+        }
+
+        while (reducedMoney >= 0) {
             var obj = _findMaxMoneyInSM(this.slotMachines)
 
             if (obj.money > reducedMoney) {
@@ -70,7 +117,7 @@ function Casino(qty, money) {
             }
         }
 
-        this.money -= money;
+        this.money -= reducedMoney;
 
 
     }
@@ -106,6 +153,7 @@ function SlotMachine(money) {
         var rn2 = Math.floor(Math.random() * 9);
         var rn3 = Math.floor(Math.random() * 9);
 
+        console.log("doGame :", "SM=", this);
         console.log("doGame :", "rn1=", rn1);
         console.log("doGame :", "rn2=", rn2);
         console.log("doGame :", "rn3=", rn3);
@@ -123,8 +171,16 @@ function SlotMachine(money) {
             this.playerMoney = winAmount;
             this.money = 0;
         }
+        else if ((rn1 == rn2) && (rn1 == rn3) && (rn2 == rn3) && (this.isLucky)) {
+            console.log("lucky three");
+            winAmount = this.money;
+            this.playerMoney = winAmount;
+            this.money = 0;
+
+        }
+
         else if ((rn1 == rn2) && (rn1 == rn3) && (rn2 == rn3)) {
-            console.log("three other ");
+            console.log("three win");
             winAmount = this.bid * 5;
             this.playerMoney += winAmount;
             this.money -= winAmount;
@@ -156,61 +212,50 @@ function SlotMachine(money) {
     }
 
 }
-/*
- var casino = new Casino(3, 100);
- var sm = casino.slotMachines[0];
- sm.putMoney(500);
 
- console.log("do game", casino.slotMachines[0].doGame());
+var casino = new Casino(2, 500);
+var sm1 = casino.slotMachines[0];
+var sm2 = casino.slotMachines[1];
 
- //console.log("casino", casino);
- */
-
-
-var spanBalance = document.querySelector('#balance');
-var spinButton = document.querySelector('#spin');
-var putButton = document.querySelector('#put');
-var putInput = document.querySelector('#put-input')
-var startButton = document.querySelector('#start');
-var betInput = document.querySelector('#bet');
-var winInput = document.querySelector('#win-input');
-var number1 = document.querySelector('#n1');
-var number2 = document.querySelector('#n2');
-var number3 = document.querySelector('#n3');
+console.log("player puts money");
+sm1.putMoney(500);
+sm2.putMoney(400);
 
 
-var casino;
-var sm1;
 
 
-startButton.addEventListener('click', function () {
+var playGameCount = 10;
+console.log("Play couple games", playGameCount);
+for (var j = 0; j < playGameCount; j++) {
 
-    casino = new Casino(3, 100);
-    sm1 = casino.slotMachines[0];
-    console.log(" :", "casino=", casino);
-})
+    for (var i = 0; i < casino.slotMachines.length; i++) {
+        console.log("do game", casino.slotMachines[i].doGame());
+    }
 
-
-startButton.click();
-betInput.value = sm1.bid;
-
-putButton.addEventListener('click', function (e) {
-    sm1.putMoney(+putInput.value);
-    spanBalance.textContent = sm1.playerMoney;
+}
 
 
-})
 
-spinButton.addEventListener('click', function (e) {
-    var gameRezult=sm1.doGame();
-    number1.textContent =gameRezult.rn1;
-    number2.textContent =gameRezult.rn2;
-    number3.textContent =gameRezult.rn3;
-        spanBalance.textContent = sm1.playerMoney;
-    winInput.value = gameRezult.winAmount;
+casino.addSM();
+casino.addSM();
+
+console.log("casino", casino);
+console.log("delete Slot machine");
+casino.deleteSM(1);
+console.log("casino", casino);
+
+console.log("casion show money", casino.getMoneyAmountCasino());
+console.log("casion withdraw money", 200);
+casino.withdraw(200);
+
+console.log("casion show money", casino.getMoneyAmountCasino());
 
 
-})
+
+
+
+
+
 
 
 
