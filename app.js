@@ -1,3 +1,5 @@
+
+
 function Casino(qty, money) {
     this.initCountSM = qty;
     this.money = money;
@@ -34,12 +36,12 @@ function Casino(qty, money) {
         var sm = new SlotMachine(startMoney);
         sm.id = this.id + 1;
         this.slotMachines.push(sm);
-        _updateBlance();
+        _updateBalance();
 
     }
 
 
-    var _updateBlance = function (add) {
+    var _updateBalance = function (add) {
         var add = add || 0
         this.money = 0;
 
@@ -61,7 +63,7 @@ function Casino(qty, money) {
 
     this.deleteSM = function (id) {
 
-        if (this.slotMachines.length = 0) {
+        if (this.slotMachines.length == 0) {
             console.log("you can not delete slot machine because 0 machines available");
             return;
         }
@@ -69,8 +71,8 @@ function Casino(qty, money) {
         for (var i = 0; i < this.slotMachines.length; i++) {
             if (this.slotMachines[i].id == id) {
                 var moneyForAllocate = this.slotMachines[i].money;
-                this.slotMachines.splice(i, 1);
-                _updateBlance();
+               this.slotMachines.splice(i, 1);
+                _updateBalance();
                 return;
             }
         }
@@ -79,7 +81,7 @@ function Casino(qty, money) {
 
     };
 
-
+//todo
     this.withdraw = function (money) {
         var reducedMoney = money || 0;
 
@@ -90,17 +92,18 @@ function Casino(qty, money) {
 
         if (this.slotMachines.length == 0) {
             this.money -= reducedMoney;
-            return this.money;
+            return;
         }
 
-        while (reducedMoney >= 0) {
-            var obj = _findMaxMoneyInSM(this.slotMachines)
+        while (reducedMoney > 0) {
+            var obj = _findMaxMoneyInSM(this.slotMachines);
 
             if (obj.money > reducedMoney) {
                 this.slotMachines.forEach(function (el) {
                     if (el.id == obj.id) {
                         el.money -= reducedMoney;
                         reducedMoney = 0;
+                        _updateBalance();
                     }
                 })
 
@@ -110,6 +113,7 @@ function Casino(qty, money) {
 
                         reducedMoney -= el.money;
                         el.money = 0;
+                        _updateBalance()
                     }
                 })
 
@@ -222,18 +226,17 @@ sm1.putMoney(500);
 sm2.putMoney(400);
 
 
-
-
-var playGameCount = 10;
+var playGameCount = 5;
 console.log("Play couple games", playGameCount);
 for (var j = 0; j < playGameCount; j++) {
-
     for (var i = 0; i < casino.slotMachines.length; i++) {
         console.log("do game", casino.slotMachines[i].doGame());
     }
 
 }
 
+console.log("!!!after game");
+console.log("casino", casino);
 
 
 casino.addSM();
@@ -244,11 +247,10 @@ console.log("delete Slot machine");
 casino.deleteSM(1);
 console.log("casino", casino);
 
-console.log("casion show money", casino.getMoneyAmountCasino());
-console.log("casion withdraw money", 200);
+console.log("casino show money", casino.getMoneyAmountCasino());
+console.log("casino withdraw money", 200);
 casino.withdraw(200);
-
-console.log("casion show money", casino.getMoneyAmountCasino());
+console.log("casino show money", casino.getMoneyAmountCasino());
 
 
 
